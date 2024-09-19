@@ -66,13 +66,37 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.dummy', 
     }
 }
 
+# Ajuste para lidar com sessões sem banco de dados
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+# Se você não estiver usando o cache, desabilite:
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache', 
+    }
+}
+
+# Certifique-se de que as migrações e o banco de dados estão desativados
+MIGRATION_MODULES = {
+    'auth': None,
+    'contenttypes': None,
+    'sessions': None,
+    'admin': None,
+    'messages': None,
+    'staticfiles': None,
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
