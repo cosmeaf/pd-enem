@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Sucesso{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="alert alert-success mt-4">
+        <h1>Sucesso!</h1>
+        <p>Sua nota foi enviada com sucesso.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Voltar para a página inicial</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const footer = document.querySelector('.footer');
+        const footerHeight = footer.offsetHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const windowHeight = window.innerHeight;
+
+        if (documentHeight > windowHeight) {
+            document.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (documentHeight - windowHeight - scrollTop <= footerHeight) {
+                    footer.classList.add('visible');
+                } else {
+                    footer.classList.remove('visible');
+                }
+            });
+        } else {
+            footer.classList.add('visible');
+        }
+    });
+</script>
+{% endblock %}

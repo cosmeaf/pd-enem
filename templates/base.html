@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  {% load static %}
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="{% static 'vite.svg' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}My Site{% endblock %}</title>
+    <link rel="icon" href="https://framerusercontent.com/images/TG6WAjlT9X9sEq6evGgBkyhOYk.png">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-pzjw8f+ua7Kw1TIqUQQ2+2wrRqvxj6AZG5Qe4baWf3zjqPcK19RO4lrKnzU7j6w" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="header">
+        <img src="{% static 'images/logoPD.png' %}" alt="Logo">
+    </div>
+    <!-- Main Content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer text-center">
+        <img src="{% static 'images/logoPD.png' %}" alt="Logo">
+        <p>Rua Tomé de Souza, 810, Cj 401, Savassi, Belo Horizonte/MG - CEP: 30.140-135. PROSPERARE</p>
+        <p>EDUCAÇÃO, CULTURA E CIDADANIA S.A - CNPJ nº 10.976.971/0001-25 Todos os direitos reservados</p>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDuLfsKX6pOA0BKOOrqbL9GcFfC1jGpj0vPuk43cpzTO4F2w9" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgEpQb8AwB3Q4XN8jqzK/RFO/2bQPLForn1p1sxgLkbiA2FUmLt" crossorigin="anonymous"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

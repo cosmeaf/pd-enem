@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Enviar PDF do ENEM{% endblock %}
+
+{% block content %}
+<div class="form-container text-center">
+    <h3>Insira o seu PDF de resultado do ENEM</h3>
+    <div class="body-card mt-4">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.enem_form }}
+                <label for="id_enem_form" class="custom-file-upload">
+                    Procurar...
+                </label>
+                <span id="file-name">Nenhum arquivo selecionado</span>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Enviar PDF</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById("id_enem_form").onchange = function () {
+        document.getElementById("file-name").textContent = this.files[0].name;
+    };
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const footer = document.querySelector('.footer');
+        const footerHeight = footer.offsetHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const windowHeight = window.innerHeight;
+
+        if (documentHeight > windowHeight) {
+            document.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (documentHeight - windowHeight - scrollTop <= footerHeight) {
+                    footer.classList.add('visible');
+                } else {
+                    footer.classList.remove('visible');
+                }
+            });
+        } else {
+            footer.classList.add('visible');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Assinatura do Contrato{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <div class="card mt-4">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Submit" class="btn btn-primary">
+            </form>
+            <a href="{% url 'OCR_image' %}" class="btn btn-link mt-3">Caso já tenha assinado o contrato, clique aqui</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('scroll', function() {
+        const footer = document.querySelector('.footer');
+        const footerHeight = footer.offsetHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const documentHeight = document.documentElement.scrollHeight;
+        const windowHeight = window.innerHeight;
+
+        if (documentHeight - windowHeight - scrollTop <= footerHeight) {
+            footer.classList.add('visible');
+        } else {
+            footer.classList.remove('visible');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Confirme seus Dados{% endblock %}
+
+{% block content %}
+<div class="form-container text-center">
+    <h1>Confirme seus Dados</h1>
+    <div class="body-card mt-4">
+        <p><strong>Nome:</strong> {{ nome }}</p>
+        <p><strong>CPF:</strong> {{ cpf }}</p>
+        <p><strong>Nota de Matemática:</strong> {{ nota_matematica }}</p>
+        <p><strong>Nota de Redação:</strong> {{ nota_redacao }}</p>
+        <p><strong>Nota Geral:</strong> {{ nota_geral }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary mt-3">Enviar Nota</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const footer = document.querySelector('.footer');
+        const footerHeight = footer.offsetHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const windowHeight = window.innerHeight;
+
+        if (documentHeight > windowHeight) {
+            document.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (documentHeight - windowHeight - scrollTop <= footerHeight) {
+                    footer.classList.add('visible');
+                } else {
+                    footer.classList.remove('visible');
+                }
+            });
+        } else {
+            footer.classList.add('visible');
+        }
+    });
+</script>
+{% endblock %}
