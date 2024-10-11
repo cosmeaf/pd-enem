@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmação dos Dados do ENEM{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center" style="margin-bottom: 100px;">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4">
+                <h1 class="mb-4 text-center">Confirmação dos Dados</h1>
+
+                <p><strong>Nome:</strong> {{ nome }}</p>
+                <p><strong>CPF:</strong> {{ cpf }}</p>
+                <p><strong>Nota de Matemática:</strong> {{ nota_matematica }}</p>
+                <p><strong>Nota de Redação:</strong> {{ nota_redacao }}</p>
+                <p><strong>Nota Geral:</strong> {{ nota_geral }}</p>
+
+                <div class="d-flex justify-content-between">
+                    <form method="post" action="{% url 'confirmar_envio' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Confirmar e Enviar</button>
+                    </form>
+                    <form method="post" action="{% url 'reenviar_dados' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Reenviar Dados</button>
+                    </form>
+                    <a href="#" class="btn btn-danger">Contactar Suporte</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

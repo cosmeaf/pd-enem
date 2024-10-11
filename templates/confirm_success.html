@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}Envio Bem-Sucedido{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" style="margin-top: 100px;"> <!-- Card posicionado 100px abaixo -->
         <div class="col-md-8">
             <div class="card shadow-lg p-4">
-                <h1 class="mb-4 text-center text-success">{{ title }}</h1>
+                <h1 class="mb-4 text-center text-success">Envio Bem-Sucedido!</h1>
 
-                <p class="lead text-center">{{ message }}</p>
+                <p class="lead text-center">Seus dados foram enviados com sucesso.</p>
                 {% if message %}
                     <p class="text-success text-center">{{ message }}</p>
                 {% endif %}
-                <p class="text-center">Código: {{ code }}</p>
 
                 <div class="d-flex justify-content-center mt-4">
-                    <a href="/" class="btn btn-primary">Voltar para a página inicial</a>
+                    <a href="/" class="btn btn-purple">Voltar para a página inicial</a>
                 </div>
             </div>
         </div>

@@ -1,33 +1,40 @@
-# Use uma imagem base oficial do Python
-FROM python:3.12-slim
+# pull the official base image
+FROM python:3.9-slim
 
-# Defina o diretório de trabalho no container
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV TZ="America/Sao_Paulo"
+
+# set work directory
 WORKDIR /app
 
-# Copie o arquivo de requisitos (requirements.txt) para a imagem
+# install dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    tzdata \
+    cron \
+    build-essential \
+    libpq-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# install python dependencies
 COPY requirements.txt /app/
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# Instale as dependências do projeto
-RUN pip install --no-cache-dir -r requirements.txt
+# copy project files
+COPY . /app
 
-# Copie todo o projeto para o container
-COPY . /app/
-
-# Defina a variável DJANGO_SETTINGS_MODULE para o módulo core.settings
-ENV DJANGO_SETTINGS_MODULE=core.settings
-
-# Executa o collectstatic para coletar os arquivos estáticos
+# collect static files
 RUN python manage.py collectstatic --noinput
 
-# Crie as pastas /app/static e /app/media se não existirem
-RUN mkdir -p /app/static /app/media
-
-# Defina permissões corretas para as pastas static e media
-RUN chown -R www-data:www-data /app/static /app/media
-RUN chmod -R 755 /app/static /app/media
-
-# Exponha a porta que a aplicação irá rodar
+# expose port 7000
 EXPOSE 7000
 
-# Comando para rodar o Gunicorn e iniciar a aplicação na porta 7000
-CMD ["gunicorn", "--workers", "3", "--bind", "0.0.0.0:7000", "core.wsgi:application"]
+# Entry point script to handle multiple services (Gunicorn + Celery)
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# run the entrypoint script
+ENTRYPOINT ["/app/entrypoint.sh"]

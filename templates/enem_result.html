@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resultado do PDF ENEM{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center" style="margin-bottom: 100px;">
+        <div class="col-md-8">
+            <div class="card shadow-lg p-4">
+                <h1 class="mb-4 text-center">Resultado do ENEM</h1>
+
+                <h3 class="mt-4">Seus dados estão corretos?</h3>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item"><strong>Nome:</strong> {{ nome }}</li>
+                    <li class="list-group-item"><strong>CPF:</strong> {{ cpf_extraido }}</li>
+                    <li class="list-group-item"><strong>Nota de Matemática:</strong> {{ nota_matematica }}</li>
+                    <li class="list-group-item"><strong>Nota de Redação:</strong> {{ nota_redacao }}</li>
+                    <li class="list-group-item"><strong>Nota Geral:</strong> {{ nota_geral }}</li>
+                </ul>
+
+                <!-- Ações -->
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'cpf_view' %}" class="btn btn-purple">Começar Novamente</a>
+                    <form method="post" action="{% url 'confirm_send' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-purple">Confirmar e Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

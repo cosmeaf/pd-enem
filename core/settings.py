@@ -2,23 +2,39 @@ import os
 from decouple import config, Csv
 from pathlib import Path
 
+APP_VERSION = "1.1.2"
+APP_AUTHOR = "Cosme Alves"
+APP_DATE = "2024-10-07"
+APP_EMAIL = "cosme.alex@gmail.com"
+APP_DESCRIPTION = "Descrição breve da aplicação"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Caminho para os arquivos de log
+LOG_FILE_PATH = '/var/log/django.log'
+DEBUG_LOG_FILE_PATH = '/var/log/debug.log'
+
+# Criação dos diretórios de logs caso não existam
+os.makedirs(os.path.dirname(LOG_FILE_PATH), exist_ok=True)
+os.makedirs(os.path.dirname(DEBUG_LOG_FILE_PATH), exist_ok=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-c!opiy$qxj=b2f_a36kpjk8-pnk!v^&tpgl0oa4f_3ts$_3_j4'
 SECRET_KEY = config('SECRET_KEY')
-# SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-# DEBUG = config('DEBUG', default=False, cast=bool)
 
-# ALLOWED_HOSTS = ['147.79.106.108']
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+API_BASE_URL = config('API_BASE_URL')
+API_KEY = config('API_KEY')
+
+CSRF_TRUSTED_ORIGINS = ['https://enem.pdinfinita.com.br']
 
 # Application definition
 
@@ -55,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.version_info.app_info',
             ],
         },
     },
@@ -66,37 +83,13 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.dummy', 
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-# Ajuste para lidar com sessões sem banco de dados
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-
-# Se você não estiver usando o cache, desabilite:
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache', 
-    }
-}
-
-# Certifique-se de que as migrações e o banco de dados estão desativados
-MIGRATION_MODULES = {
-    'auth': None,
-    'contenttypes': None,
-    'sessions': None,
-    'admin': None,
-    'messages': None,
-    'staticfiles': None,
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -120,9 +113,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo' 
 
 USE_I18N = True
 
@@ -147,11 +140,81 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = ['https://docs.pdinfinita.com.br']
-CSRF_COOKIE_SECURE = True 
-SESSION_COOKIE_SECURE = True
+# core/settings.py
+
+# Configurações do Celery
+CELERY_BROKER_URL = 'redis://172.16.0.13:6379/0'  # IP do Redis no Docker
+CELERY_RESULT_BACKEND = 'redis://172.16.0.13:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'America/Sao_Paulo'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+
+# Configuração de logs para o Django
+# Configuração de logs para o Django e Celery
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': LOG_FILE_PATH,
+            'formatter': 'verbose',
+        },
+        'debug_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': DEBUG_LOG_FILE_PATH,
+            'formatter': 'verbose',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['debug_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'celery': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'celery.task': {
+            'handlers': ['debug_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        '': {  # Root logger
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+        },
+    },
+}

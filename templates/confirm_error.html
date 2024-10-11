@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Erro no Envio{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center" style="margin-top: 100px;">
+        <div class="col-md-8">
+            <div class="card shadow-lg p-4">
+                <h1 class="mb-4 text-center text-danger">Erro no Envio</h1>
+
+                <p class="lead text-center">Ocorreu um erro ao tentar enviar seus dados. Por favor, tente novamente mais tarde.</p>
+                {% if message %}
+                    <p class="text-warning text-center">{{ message }}</p>
+                {% endif %}
+
+                <div class="d-flex justify-content-center mt-4">
+                    <a href="/" class="btn btn-purple">Voltar para a página inicial</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

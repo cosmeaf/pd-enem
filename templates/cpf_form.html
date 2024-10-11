@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Validação de CPF{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center" style="margin-bottom: 100px;">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4">
+                <h1 class="mb-4 text-center">Validação de CPF</h1>
+
+                <!-- Exibir mensagens de erro ou sucesso -->
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <!-- Formulário de CPF já estilizado pelo forms.py -->
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="cpf" class="form-label">CPF</label>
+                        {{ form.cpf }}  <!-- Campo CPF renderizado com a classe 'form-control' -->
+                    </div>
+                    <button type="submit" class="btn btn-purple w-100">Enviar CPF</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<!-- jQuery (necessário para a máscara) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/6b5M4b4v7l/4/3G+jpbl5N0ChjG7xDlcM1Z9+6" crossorigin="anonymous"></script>
+<!-- Plugin de máscara -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Aplica a máscara de CPF ao campo de entrada
+        $('#id_cpf').mask('000.000.000-00');
+    });
+</script>
+{% endblock %}
